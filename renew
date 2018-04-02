@@ -7,5 +7,4 @@ docker run -it --rm \
       certonly \
       --webroot --webroot-path=/data/letsencrypt \
       -d stephen-hellicar.com -d www.stephen-hellicar.com
-docker-compose kill -s HUP proxy
-
+./up
