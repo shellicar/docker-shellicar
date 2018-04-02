@@ -29,9 +29,9 @@ services:
         - webapp
         - webapi
         volumes:
-        - certs:/etc/letsencrypt
-        - certs-data:/data/letsencrypt
-        - /etc/localtime:/etc/localtime
+        - certs:/etc/letsencrypt:ro
+        - certs-data:/data/letsencrypt:ro
+        - /etc/localtime:/etc/localtime:ro
 volumes:
     certs:
         driver: local
