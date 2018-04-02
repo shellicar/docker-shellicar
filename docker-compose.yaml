@@ -29,8 +29,9 @@ services:
         - webapp
         - webapi
         volumes:
-        - certs:/etc/letsencrypt
-        - certs-data:/data/letsencrypt
+        - /etc/letsencrypt/live/stephen-hellicar.com/fullchain.pem:/etc/letsencrypt/live/stephen-hellicar.com/fullchain.pem:ro
+        - /etc/letsencrypt/live/stephen-hellicar.com/privkey.pem:/etc/letsencrypt/live/stephen-hellicar.com/privkey.pem:ro
+        - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
         - /etc/localtime:/etc/localtime:ro
 volumes:
     certs:
