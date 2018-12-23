@@ -18,6 +18,17 @@ services:
         expose:
         - "5000"
         restart: always
+    code:
+        environment:
+            - GITUSER=shellicar
+            - GITPASSWORD=password
+            - my_uri=code/
+        volumes:
+        - /git:/var/lib/git
+        expose:
+        - "80"
+        restart: always
+        build: ./gitweb
 
     proxy:
         build: ./nginx
@@ -28,6 +39,7 @@ services:
         depends_on:
         - webapp
         - webapi
+        - code
         volumes:
         - certs:/etc/letsencrypt:ro
         - certs-data:/data/letsencrypt:ro
