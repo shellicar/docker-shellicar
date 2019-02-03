@@ -10,5 +10,4 @@ docker run -it --rm \
       certonly \
       --webroot --webroot-path=/data/letsencrypt \
       -d stephen-hellicar.com -d www.stephen-hellicar.com
-docker-compose -f ${FILENAME} restart
-
+docker-compose kill -s SIGHUP proxy
