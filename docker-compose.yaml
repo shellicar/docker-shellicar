@@ -1,57 +1,63 @@
-version: '3.1'
-services:
-    webapp:
-        environment:
-            - ASPNETCORE_URLS=http://0.0.0.0:5000
-        entrypoint: dotnet StephenHellicar.Website.WebApp.dll
-        expose:
-        - "5000"
-        restart: always
-        working_dir: /app
-        build: ./webapp
-    webapi:
-        environment:
-            - ASPNETCORE_URLS=http://0.0.0.0:5000
-        entrypoint: dotnet StephenHellicar.Website.WebAPI.dll
-        working_dir: /api
-        build: ./webapi
-        expose:
-        - "5000"
-        restart: always
-    code:
-        secrets:
-            - source: gitweb
-              target: /etc/nginx/.htpasswd
-        environment:
-            - GITUSER=
-            - GITPASSWORD=
-            - my_uri=code/
-        volumes:
-        - /git:/var/lib/git
-        expose:
-        - "80"
-        restart: always
-        build: ./gitweb
-    proxy:
-        build: ./nginx
-        ports:
-        - "80:80"
-        - "443:443"
-        restart: always
-        depends_on:
-        - webapp
-        - webapi
-        - code
-        volumes:
-        - certs:/etc/letsencrypt:ro
-        - certs-data:/data/letsencrypt:ro
-        - /etc/localtime:/etc/localtime:ro
-volumes:
-    certs:
-        driver: local
-    certs-data:
-        driver: local
 secrets:
-    gitweb:
-        file: ../secrets/gitweb_htpasswd
+  gitweb:
+    file: ../secrets/gitweb_htpasswd
+services:
+  code:
+    build:
+      context: gitweb
+    environment:
+      GITPASSWORD: ''
+      GITUSER: ''
+      my_uri: code/
+    expose:
+    - '80'
+    restart: always
+    secrets:
+    - source: gitweb
+      target: /etc/nginx/.htpasswd
+    volumes:
+    - /git:/var/lib/git:rw
+  proxy:
+    build:
+      context: nginx
+    depends_on:
+    - code
+    - webapi
+    - webapp
+    ports:
+    - published: 80
+      target: 80
+    - published: 443
+      target: 443
+    restart: always
+    volumes:
+    - certs:/etc/letsencrypt:ro
+    - certs-data:/data/letsencrypt:ro
+    - /etc/localtime:/etc/localtime:ro
+  webapi:
+    build:
+      context: webapi
+    entrypoint: dotnet StephenHellicar.Website.WebAPI.dll
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+    expose:
+    - '5000'
+    restart: always
+    working_dir: /api
+  webapp:
+    build:
+      context: webapp
+    entrypoint: dotnet StephenHellicar.Website.WebApp.dll
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+    expose:
+    - '5000'
+    restart: always
+    working_dir: /app
+version: '3.7'
+volumes:
+  certs:
+    driver: local
+  certs-data:
+    driver: local
 
