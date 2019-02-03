@@ -1,4 +1,4 @@
-version: '2'
+version: '3.1'
 services:
     webapp:
         environment:
@@ -19,9 +19,11 @@ services:
         - "5000"
         restart: always
     code:
+        secrets:
+            - gitweb_htpasswd
         environment:
-            - GITUSER=shellicar
-            - GITPASSWORD=password
+            - GITUSER=
+            - GITPASSWORD=
             - my_uri=code/
         volumes:
         - /git:/var/lib/git
@@ -29,7 +31,6 @@ services:
         - "80"
         restart: always
         build: ./gitweb
-
     proxy:
         build: ./nginx
         ports:
@@ -49,4 +50,7 @@ volumes:
         driver: local
     certs-data:
         driver: local
+secrets:
+    gitweb_htpasswd:
+        file: ../secrets/gitweb_htpasswd
 
