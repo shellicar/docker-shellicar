@@ -20,7 +20,8 @@ services:
         restart: always
     code:
         secrets:
-            - gitweb_htpasswd
+            - source: gitweb
+              target: /etc/nginx/.htpasswd
         environment:
             - GITUSER=
             - GITPASSWORD=
@@ -51,6 +52,6 @@ volumes:
     certs-data:
         driver: local
 secrets:
-    gitweb_htpasswd:
+    gitweb:
         file: ../secrets/gitweb_htpasswd
 
