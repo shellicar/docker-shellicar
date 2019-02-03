@@ -2,7 +2,6 @@
 
 DIRNAME=$(dirname $0)
 FILENAME=${DIRNAME}/docker-compose.yaml
-
 docker run -it --rm \
       -v shellicar_certs:/etc/letsencrypt \
       -v shellicar_certs-data:/data/letsencrypt \
@@ -10,4 +9,5 @@ docker run -it --rm \
       certonly \
       --webroot --webroot-path=/data/letsencrypt \
       -d stephen-hellicar.com -d www.stephen-hellicar.com
-docker-compose kill -s SIGHUP proxy
+docker-compose -f "${FILENAME}" kill -s SIGHUP proxy
+
