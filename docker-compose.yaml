@@ -37,7 +37,6 @@ services:
   webapi:
     build:
       context: webapi
-    entrypoint: dotnet StephenHellicar.Website.WebAPI.dll
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:5000
     expose:
@@ -47,7 +46,6 @@ services:
   webapp:
     build:
       context: webapp
-    entrypoint: dotnet StephenHellicar.Website.WebApp.dll
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:5000
     expose:
